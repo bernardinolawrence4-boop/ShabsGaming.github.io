@@ -312,7 +312,7 @@
         </div>
     </div>
 
-    <!-- UPDATE AVATAR MODAL (FILE UPLOAD ONLY) -->
+    <!-- UPDATE AVATAR MODAL (BROWSE FROM DEVICE ONLY) -->
     <div id="avatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-sm w-full p-6 shadow-2xl relative clip-polygon">
             <button onclick="closeAvatarModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
@@ -321,30 +321,30 @@
             
             <div class="flex items-center gap-2 mb-2">
                 <i class="fa-solid fa-user-gear text-neonCyan text-xl"></i>
-                <h3 class="font-orbitron text-lg font-bold text-white">CHANGE PROFILE PIC</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white">UPLOAD PROFILE PICTURE</h3>
             </div>
             
             <p class="text-xs text-gray-400 mb-4">
-                Select an image file from your device to upload.
+                Click below to browse and select an image file from your device.
             </p>
 
             <form onsubmit="handleAvatarSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">CHOOSE IMAGE FILE</label>
-                    <input type="file" id="avatarFileInput" accept="image/*" required onchange="previewAvatarFile(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">BROWSE IMAGE FROM DEVICE</label>
+                    <input type="file" id="avatarFileInput" accept="image/*" required onchange="previewAvatarFile(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
                 </div>
 
                 <div class="pt-2 flex justify-end gap-3">
                     <button type="button" onclick="closeAvatarModal()" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
                     <button type="submit" class="px-5 py-2 font-orbitron text-xs font-bold bg-neonCyan text-black rounded hover:bg-neonGreen transition-colors cursor-pointer">
-                        SAVE PIC
+                        UPLOAD & SAVE
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ADD HIGHLIGHT / UPLOAD MODAL (FILE UPLOAD ONLY) -->
+    <!-- ADD HIGHLIGHT / UPLOAD MODAL (BROWSE FROM DEVICE ONLY) -->
     <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-lg w-full p-6 shadow-2xl relative clip-polygon">
             <button onclick="closeUploadModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
@@ -361,7 +361,7 @@
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">MEDIA TYPE</label>
                     <select id="mediaType" onchange="updateUploadAcceptType()" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                         <option value="video">Video File (.mp4, .webm, .mov)</option>
-                        <option value="photo">Photo / Image Screenshot (.png, .jpg, .gif)</option>
+                        <option value="photo">Photo / Screenshot (.png, .jpg, .jpeg, .gif)</option>
                         <option value="montage">Montage Video File</option>
                     </select>
                 </div>
@@ -372,8 +372,8 @@
                 </div>
 
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">CHOOSE FILE FROM COMPUTER</label>
-                    <input type="file" id="mediaFileInput" accept="video/*" required onchange="handleMediaFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">BROWSE FILE FROM DEVICE</label>
+                    <input type="file" id="mediaFileInput" accept="video/*" required onchange="handleMediaFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
                 </div>
 
                 <div>
@@ -413,7 +413,7 @@
         let isAdmin = localStorage.getItem('shabs_admin_status') === 'true';
         let currentFilter = 'all';
 
-        // DEFAULT DEMO ITEMS (Stored with local fallback samples)
+        // DEFAULT DATA STORE
         let defaultItems = [
             { id: '1', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
             { id: '2', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
@@ -488,7 +488,7 @@
             }
         }
 
-        // AVATAR MODAL & FILE UPLOAD
+        // AVATAR BROWSE & UPLOAD
         function openAvatarModal() {
             if (!isAdmin) return;
             document.getElementById('avatarFileInput').value = '';
@@ -527,7 +527,7 @@
             }
         }
 
-        // MEDIA HIGHLIGHT FILE UPLOAD
+        // MEDIA HIGHLIGHT BROWSE & UPLOAD
         function openUploadModal() {
             if (!isAdmin) return;
             document.getElementById('mediaFileInput').value = '';
@@ -568,7 +568,7 @@
             if (!isAdmin) return;
 
             if (!uploadedMediaBase64) {
-                alert('Please select a file to upload!');
+                alert('Please browse and select a file to upload!');
                 return;
             }
 
