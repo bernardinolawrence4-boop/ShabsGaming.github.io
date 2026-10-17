@@ -149,8 +149,8 @@
                             <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80" alt="[MOD] Shabs Profile" class="w-full h-full object-cover">
                             
                             <!-- Admin Edit Avatar Overlay -->
-                            <button id="changeAvatarBtn" onclick="openAvatarModal()" type="button" class="hidden absolute inset-0 bg-black/70 flex-col items-center justify-center text-neonCyan text-xs font-orbitron font-bold group-hover:flex transition-opacity">
-                                <i class="fa-solid fa-camera text-base mb-1"></i> EDIT
+                            <button id="changeAvatarBtn" onclick="openAvatarModal()" type="button" class="hidden absolute inset-0 bg-black/70 flex-col items-center justify-center text-neonCyan text-xs font-orbitron font-bold group-hover:flex transition-opacity cursor-pointer">
+                                <i class="fa-solid fa-camera text-base mb-1"></i> UPLOAD
                             </button>
                         </div>
                     </div>
@@ -312,7 +312,7 @@
         </div>
     </div>
 
-    <!-- UPDATE AVATAR MODAL -->
+    <!-- UPDATE AVATAR MODAL (FILE UPLOAD ONLY) -->
     <div id="avatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-sm w-full p-6 shadow-2xl relative clip-polygon">
             <button onclick="closeAvatarModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
@@ -321,30 +321,30 @@
             
             <div class="flex items-center gap-2 mb-2">
                 <i class="fa-solid fa-user-gear text-neonCyan text-xl"></i>
-                <h3 class="font-orbitron text-lg font-bold text-white">UPDATE PROFILE PICTURE</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white">CHANGE PROFILE PIC</h3>
             </div>
             
             <p class="text-xs text-gray-400 mb-4">
-                Enter the image URL for your new profile picture.
+                Select an image file from your device to upload.
             </p>
 
             <form onsubmit="handleAvatarSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">IMAGE URL</label>
-                    <input type="url" id="avatarUrlInput" required placeholder="https://..." class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">CHOOSE IMAGE FILE</label>
+                    <input type="file" id="avatarFileInput" accept="image/*" required onchange="previewAvatarFile(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
                 </div>
 
                 <div class="pt-2 flex justify-end gap-3">
                     <button type="button" onclick="closeAvatarModal()" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
                     <button type="submit" class="px-5 py-2 font-orbitron text-xs font-bold bg-neonCyan text-black rounded hover:bg-neonGreen transition-colors cursor-pointer">
-                        UPDATE
+                        SAVE PIC
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ADD HIGHLIGHT / UPLOAD MODAL -->
+    <!-- ADD HIGHLIGHT / UPLOAD MODAL (FILE UPLOAD ONLY) -->
     <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-lg w-full p-6 shadow-2xl relative clip-polygon">
             <button onclick="closeUploadModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
@@ -353,16 +353,16 @@
             
             <div class="flex items-center gap-2 mb-4">
                 <i class="fa-solid fa-cloud-arrow-up text-neonCyan text-xl"></i>
-                <h3 class="font-orbitron text-lg font-bold text-white">UPLOAD / ADD HIGHLIGHT</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white">UPLOAD HIGHLIGHT</h3>
             </div>
             
             <form onsubmit="handleUploadSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">MEDIA TYPE</label>
-                    <select id="mediaType" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
-                        <option value="video">Video (YouTube / Embed URL)</option>
-                        <option value="photo">Photo / Image Screenshot</option>
-                        <option value="montage">Montage Edit</option>
+                    <select id="mediaType" onchange="updateUploadAcceptType()" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                        <option value="video">Video File (.mp4, .webm, .mov)</option>
+                        <option value="photo">Photo / Image Screenshot (.png, .jpg, .gif)</option>
+                        <option value="montage">Montage Video File</option>
                     </select>
                 </div>
 
@@ -372,9 +372,8 @@
                 </div>
 
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">IMAGE / VIDEO URL</label>
-                    <input type="url" id="mediaUrl" required placeholder="https://www.youtube.com/embed/... or https://images.unsplash.com/..." class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
-                    <span class="text-[10px] text-gray-500 mt-1 block">For YouTube videos, use the official embed format: <strong>https://www.youtube.com/embed/VIDEO_ID</strong></span>
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">CHOOSE FILE FROM COMPUTER</label>
+                    <input type="file" id="mediaFileInput" accept="video/*" required onchange="handleMediaFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
                 </div>
 
                 <div>
@@ -407,29 +406,34 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Security: Obfuscated verification instead of plain-text variables
-        const _uHash = "YWRtaW4="; // Base64 encoded username
-        const _pHash = "c2hhYnMxMjM="; // Base64 encoded password
+        // Encoded authentication tokens
+        const _uHash = "YWRtaW4="; 
+        const _pHash = "c2hhYnMxMjM="; 
 
         let isAdmin = localStorage.getItem('shabs_admin_status') === 'true';
         let currentFilter = 'all';
 
-        // DEFAULT DATA STORE
+        // DEFAULT DEMO ITEMS (Stored with local fallback samples)
         let defaultItems = [
-            { id: '1', type: 'video', title: 'Special Force Alpha - [TM] Shabs Pub Event Tournament Final', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'SPECIAL FORCE ALPHA', views: '4.2k', date: '2 DAYS AGO' },
-            { id: '2', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
-            { id: '3', type: 'montage', title: 'Shabs Gaming - Best Snipes & Flick Shots Vol. 1', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'MONTAGE', views: '12.5k', date: '1 WEEK AGO' },
-            { id: '4', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
+            { id: '1', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
+            { id: '2', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
         ];
 
         let mediaItems = JSON.parse(localStorage.getItem('shabs_media_list')) || defaultItems;
         let savedAvatar = localStorage.getItem('shabs_avatar_url') || "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80";
+        
+        let uploadedAvatarBase64 = "";
+        let uploadedMediaBase64 = "";
 
-        // Initialize Avatar
+        // Set initial Avatar
         document.getElementById('profileAvatarImg').src = savedAvatar;
 
         function saveStorage() {
-            localStorage.setItem('shabs_media_list', JSON.stringify(mediaItems));
+            try {
+                localStorage.setItem('shabs_media_list', JSON.stringify(mediaItems));
+            } catch (e) {
+                alert("Storage limit reached! Please try uploading smaller files.");
+            }
         }
 
         function updateUIState() {
@@ -484,10 +488,11 @@
             }
         }
 
-        // AVATAR MODAL FUNCTIONS
+        // AVATAR MODAL & FILE UPLOAD
         function openAvatarModal() {
             if (!isAdmin) return;
-            document.getElementById('avatarUrlInput').value = savedAvatar;
+            document.getElementById('avatarFileInput').value = '';
+            uploadedAvatarBase64 = "";
             document.getElementById('avatarModal').classList.remove('hidden');
         }
 
@@ -495,22 +500,41 @@
             document.getElementById('avatarModal').classList.add('hidden');
         }
 
+        function previewAvatarFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedAvatarBase64 = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         function handleAvatarSubmit(e) {
             e.preventDefault();
             if (!isAdmin) return;
 
-            const newUrl = document.getElementById('avatarUrlInput').value.trim();
-            if (newUrl) {
-                savedAvatar = newUrl;
+            if (uploadedAvatarBase64) {
+                savedAvatar = uploadedAvatarBase64;
                 document.getElementById('profileAvatarImg').src = savedAvatar;
-                localStorage.setItem('shabs_avatar_url', savedAvatar);
+                try {
+                    localStorage.setItem('shabs_avatar_url', savedAvatar);
+                } catch (err) {
+                    alert('Avatar file size is too large. Please choose a smaller image.');
+                }
                 closeAvatarModal();
             }
         }
 
-        // UPLOAD MODAL FUNCTIONS
+        // MEDIA HIGHLIGHT FILE UPLOAD
         function openUploadModal() {
             if (!isAdmin) return;
+            document.getElementById('mediaFileInput').value = '';
+            document.getElementById('mediaTitle').value = '';
+            document.getElementById('mediaTag').value = '';
+            uploadedMediaBase64 = "";
+            updateUploadAcceptType();
             document.getElementById('uploadModal').classList.remove('hidden');
         }
 
@@ -518,20 +542,45 @@
             document.getElementById('uploadModal').classList.add('hidden');
         }
 
+        function updateUploadAcceptType() {
+            const type = document.getElementById('mediaType').value;
+            const fileInput = document.getElementById('mediaFileInput');
+            if (type === 'photo') {
+                fileInput.accept = 'image/*';
+            } else {
+                fileInput.accept = 'video/*';
+            }
+        }
+
+        function handleMediaFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedMediaBase64 = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         function handleUploadSubmit(e) {
             e.preventDefault();
             if (!isAdmin) return;
 
+            if (!uploadedMediaBase64) {
+                alert('Please select a file to upload!');
+                return;
+            }
+
             const type = document.getElementById('mediaType').value;
             const title = document.getElementById('mediaTitle').value;
-            const url = document.getElementById('mediaUrl').value;
             const tag = document.getElementById('mediaTag').value.toUpperCase() || 'HIGHLIGHT';
 
             const newItem = {
                 id: Date.now().toString(),
                 type: type,
                 title: title,
-                url: url,
+                url: uploadedMediaBase64,
                 tag: tag,
                 views: '1',
                 date: 'JUST NOW'
@@ -596,8 +645,8 @@
                 if (item.type === 'video' || item.type === 'montage') {
                     mediaHTML = `
                         <div class="relative w-full aspect-video bg-black overflow-hidden">
-                            <iframe src="${item.url}" class="w-full h-full border-0" allowfullscreen></iframe>
-                            <div class="absolute top-2 left-2">
+                            <video src="${item.url}" controls class="w-full h-full object-cover"></video>
+                            <div class="absolute top-2 left-2 pointer-events-none">
                                 <span class="bg-black/80 border border-neonCyan/50 text-neonCyan text-[10px] font-orbitron font-bold px-2 py-0.5 rounded">
                                     <i class="fa-solid fa-circle-play mr-1"></i>${item.tag || 'VIDEO'}
                                 </span>
