@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- Social Links & Buttons -->
+            <!-- Social Links & Admin Action Buttons -->
             <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-center sm:justify-end">
                 <div class="flex items-center gap-2 mr-2">
                     <a href="#" title="YouTube" class="w-9 h-9 rounded bg-darkCard border border-darkBorder flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-500 transition-colors">
@@ -121,13 +121,13 @@
                     </a>
                 </div>
 
-                <!-- Admin Dynamic Button (Login / Logout) -->
-                <button id="authBtn" type="button" class="font-orbitron text-xs font-bold border border-darkBorder bg-darkCard text-gray-300 px-3.5 py-2.5 rounded hover:border-neonCyan hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
+                <!-- Admin Dynamic Button -->
+                <button id="authBtn" onclick="toggleAdminAuth()" type="button" class="font-orbitron text-xs font-bold border border-darkBorder bg-darkCard text-gray-300 px-3.5 py-2.5 rounded hover:border-neonCyan hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
                     <i class="fa-solid fa-user-shield text-neonCyan"></i> <span id="authBtnText">ADMIN LOGIN</span>
                 </button>
 
-                <!-- Add Highlight Button -->
-                <button id="addHighlightBtn" type="button" class="hidden font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
+                <!-- Add Highlight Button (Revealed on Admin Login) -->
+                <button id="addHighlightBtn" onclick="openUploadModal()" type="button" class="hidden font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
                     <i class="fa-solid fa-plus text-sm"></i> ADD HIGHLIGHT
                 </button>
             </div>
@@ -160,9 +160,8 @@
                             </span>
                         </div>
                         <h2 class="font-orbitron text-xl sm:text-2xl font-black text-white uppercase tracking-wider">
-                            Lawrence Bernardino
+                            SHABS GAMING
                         </h2>
-                        <!-- UPDATED PROFILE DESCRIPTION -->
                         <p class="text-xs text-gray-300 mt-1 max-w-md leading-relaxed">
                             Official Game Moderator of <strong class="text-white">Special Force Alpha</strong>.<br>
                             Showing my skill highlight and others gaming update.
@@ -205,7 +204,7 @@
                     <div class="bg-darkBg/80 border border-darkBorder px-3 py-1.5 rounded flex items-center gap-2">
                         <i class="fa-solid fa-circle-play text-neonCyan"></i>
                         <span class="text-gray-400">Total Clips:</span>
-                        <span class="text-white font-bold" id="totalClipsCount">6</span>
+                        <span class="text-white font-bold" id="totalClipsCount">0</span>
                     </div>
                     <div class="bg-darkBg/80 border border-darkBorder px-3 py-1.5 rounded flex items-center gap-2">
                         <i class="fa-solid fa-trophy text-neonGold"></i>
@@ -219,16 +218,16 @@
         <!-- FILTER TABS & SEARCH -->
         <section class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
             <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                <button type="button" id="tab-all" class="tab-btn active-tab font-orbitron text-xs font-bold px-4 py-2 rounded bg-neonCyan text-black transition-all cursor-pointer">
+                <button type="button" onclick="filterMedia('all')" id="tab-all" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-neonCyan text-black transition-all cursor-pointer">
                     ALL MEDIA
                 </button>
-                <button type="button" id="tab-video" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-darkCard border border-darkBorder text-gray-300 hover:text-white hover:border-neonCyan transition-all cursor-pointer">
+                <button type="button" onclick="filterMedia('video')" id="tab-video" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-darkCard border border-darkBorder text-gray-300 hover:text-white hover:border-neonCyan transition-all cursor-pointer">
                     <i class="fa-solid fa-video mr-1"></i> VIDEOS
                 </button>
-                <button type="button" id="tab-photo" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-darkCard border border-darkBorder text-gray-300 hover:text-white hover:border-neonCyan transition-all cursor-pointer">
+                <button type="button" onclick="filterMedia('photo')" id="tab-photo" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-darkCard border border-darkBorder text-gray-300 hover:text-white hover:border-neonCyan transition-all cursor-pointer">
                     <i class="fa-solid fa-image mr-1"></i> PHOTOS
                 </button>
-                <button type="button" id="tab-montage" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-darkCard border border-darkBorder text-gray-300 hover:text-white hover:border-neonCyan transition-all cursor-pointer">
+                <button type="button" onclick="filterMedia('montage')" id="tab-montage" class="tab-btn font-orbitron text-xs font-bold px-4 py-2 rounded bg-darkCard border border-darkBorder text-gray-300 hover:text-white hover:border-neonCyan transition-all cursor-pointer">
                     <i class="fa-solid fa-fire text-neonGold mr-1"></i> MONTAGES
                 </button>
             </div>
@@ -236,21 +235,21 @@
             <!-- Search Field -->
             <div class="relative w-full md:w-72">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-                <input type="text" id="searchInput" placeholder="Search title or tags..." 
+                <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Search title or tags..." 
                        class="w-full bg-darkCard border border-darkBorder rounded pl-9 pr-4 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-neonCyan font-rajdhani">
             </div>
         </section>
 
         <!-- SHOWCASE MEDIA GRID -->
         <section id="mediaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamically populated -->
+            <!-- Items generated dynamically -->
         </section>
 
         <!-- EMPTY STATE -->
         <div id="emptyState" class="hidden text-center py-16">
             <i class="fa-solid fa-ghost text-5xl text-gray-600 mb-3"></i>
             <h3 class="font-orbitron text-lg font-bold text-gray-400">NO HIGHLIGHTS FOUND</h3>
-            <p class="text-gray-600 text-xs mt-1">Try clearing your search or ask Admin to add new media.</p>
+            <p class="text-gray-600 text-xs mt-1">Log in as admin to upload your first clip or photo!</p>
         </div>
     </main>
 
@@ -267,20 +266,20 @@
     <!-- ADMIN LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-sm w-full p-6 shadow-2xl relative clip-polygon">
-            <button id="closeLoginBtn" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+            <button onclick="closeLoginModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             
             <div class="flex items-center gap-2 mb-2">
                 <i class="fa-solid fa-lock text-neonCyan text-xl"></i>
-                <h3 class="font-orbitron text-lg font-bold text-white">ADMIN ACCESS</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white">ADMIN LOGIN</h3>
             </div>
             
             <p class="text-xs text-gray-400 mb-5">
-                Log in to unlock highlight uploading and media management permissions.
+                Log in to enable upload features and media controls.
             </p>
 
-            <form id="loginForm" class="space-y-4">
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">USERNAME</label>
                     <input type="text" id="loginUsername" required placeholder="admin" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
@@ -288,15 +287,15 @@
 
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">PASSWORD</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <input type="password" id="loginPassword" required placeholder="shabs123" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div id="loginError" class="hidden text-red-500 text-[11px] font-orbitron font-bold text-center">
-                    Invalid username or password! (Default: admin / shabs123)
+                    Incorrect username or password!
                 </div>
 
                 <div class="pt-2 flex justify-end gap-3">
-                    <button id="cancelLoginBtn" type="button" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
+                    <button type="button" onclick="closeLoginModal()" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
                     <button type="submit" class="px-5 py-2 font-orbitron text-xs font-bold bg-neonCyan text-black rounded hover:bg-neonGreen transition-colors cursor-pointer">
                         LOGIN
                     </button>
@@ -305,341 +304,314 @@
         </div>
     </div>
 
-    <!-- ADD LINK MODAL -->
+    <!-- ADD HIGHLIGHT / UPLOAD MODAL -->
     <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-lg w-full p-6 shadow-2xl relative clip-polygon">
-            <button id="closeUploadBtn" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+            <button onclick="closeUploadModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             
             <div class="flex items-center gap-2 mb-4">
-                <i class="fa-solid fa-link text-neonCyan text-xl"></i>
-                <h3 class="font-orbitron text-lg font-bold text-white">ADD HIGHLIGHT LINK</h3>
+                <i class="fa-solid fa-cloud-arrow-up text-neonCyan text-xl"></i>
+                <h3 class="font-orbitron text-lg font-bold text-white">UPLOAD / ADD HIGHLIGHT</h3>
             </div>
             
-            <p class="text-xs text-gray-400 mb-5">
-                Paste your video embed URL (YouTube, Streamable) or direct image URL to feature it instantly on your hub.
-            </p>
-
-            <form id="addMediaForm" class="space-y-4">
+            <form onsubmit="handleUploadSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">MEDIA TYPE</label>
                     <select id="mediaType" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
-                        <option value="video">Video (YouTube/Video Embed)</option>
-                        <option value="photo">Photo / Screenshot</option>
+                        <option value="video">Video (YouTube / Embed URL)</option>
+                        <option value="photo">Photo / Image Screenshot</option>
                         <option value="montage">Montage Edit</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">HIGHLIGHT TITLE</label>
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">TITLE</label>
                     <input type="text" id="mediaTitle" required placeholder="e.g. Special Force Alpha Pub Event Ace" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">MEDIA URL / EMBED LINK</label>
-                    <input type="url" id="mediaUrl" required placeholder="https://www.youtube.com/embed/..." class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
-                    <span class="text-[10px] text-gray-500 mt-1 block">For YouTube videos, use the official embed format: https://www.youtube.com/embed/VIDEO_ID</span>
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">IMAGE / VIDEO URL</label>
+                    <input type="url" id="mediaUrl" required placeholder="https://www.youtube.com/embed/... or https://images.unsplash.com/..." class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <span class="text-[10px] text-gray-500 mt-1 block">For YouTube videos, use the official embed format: <strong>https://www.youtube.com/embed/VIDEO_ID</strong></span>
                 </div>
 
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">TAG / GAME NAME</label>
-                    <input type="text" id="mediaTag" placeholder="e.g. SPECIAL FORCE ALPHA, VALORANT" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">TAG / CATEGORY</label>
+                    <input type="text" id="mediaTag" placeholder="e.g. SPECIAL FORCE ALPHA, CS2, VALORANT" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div class="pt-2 flex justify-end gap-3">
-                    <button id="cancelUploadBtn" type="button" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
+                    <button type="button" onclick="closeUploadModal()" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
                     <button type="submit" class="px-5 py-2 font-orbitron text-xs font-bold bg-neonCyan text-black rounded hover:bg-neonGreen transition-colors cursor-pointer">
-                        ADD TO HUB
+                        PUBLISH HIGHLIGHT
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- LIGHTBOX MODAL FOR PHOTOS/VIDEOS -->
-    <div id="lightboxModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
-        <div class="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center">
-            <button id="closeLightboxBtn" type="button" class="absolute -top-10 right-0 text-white text-2xl hover:text-neonCyan">
+    <!-- LIGHTBOX MODAL FOR PREVIEWS -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden" onclick="closeLightbox()">
+        <div class="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" type="button" class="absolute -top-10 right-0 text-white text-2xl hover:text-neonCyan">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div id="lightboxContent" class="w-full rounded-lg overflow-hidden border border-neonCyan/30 shadow-2xl bg-black">
-                <!-- Dynamic Content -->
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT SYSTEM -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById('year').textContent = new Date().getFullYear();
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-            // ADMIN CREDENTIALS
-            const ADMIN_CREDENTIALS = {
-                username: 'admin',
-                password: 'shabs123'
+        // ADMIN CREDS
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "shabs123";
+
+        let isAdmin = localStorage.getItem('shabs_admin_status') === 'true';
+        let currentFilter = 'all';
+
+        // DEFAULT DATA STORE
+        let defaultItems = [
+            { id: '1', type: 'video', title: 'Special Force Alpha - [TM] Shabs Pub Event Tournament Final', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'SPECIAL FORCE ALPHA', views: '4.2k', date: '2 DAYS AGO' },
+            { id: '2', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
+            { id: '3', type: 'montage', title: 'Shabs Gaming - Best Snipes & Flick Shots Vol. 1', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'MONTAGE', views: '12.5k', date: '1 WEEK AGO' },
+            { id: '4', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
+        ];
+
+        let mediaItems = JSON.parse(localStorage.getItem('shabs_media_list')) || defaultItems;
+
+        function saveStorage() {
+            localStorage.setItem('shabs_media_list', JSON.stringify(mediaItems));
+        }
+
+        function updateUIState() {
+            const addBtn = document.getElementById('addHighlightBtn');
+            const authText = document.getElementById('authBtnText');
+
+            if (isAdmin) {
+                addBtn.classList.remove('hidden');
+                addBtn.classList.add('flex');
+                authText.textContent = 'LOGOUT';
+            } else {
+                addBtn.classList.add('hidden');
+                addBtn.classList.remove('flex');
+                authText.textContent = 'ADMIN LOGIN';
+            }
+            applyFilters();
+        }
+
+        // AUTH FUNCTIONS
+        function toggleAdminAuth() {
+            if (isAdmin) {
+                isAdmin = false;
+                localStorage.setItem('shabs_admin_status', 'false');
+                updateUIState();
+            } else {
+                document.getElementById('loginModal').classList.remove('hidden');
+                document.getElementById('loginError').classList.add('hidden');
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUsername').value.trim();
+            const p = document.getElementById('loginPassword').value.trim();
+
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                isAdmin = true;
+                localStorage.setItem('shabs_admin_status', 'true');
+                closeLoginModal();
+                updateUIState();
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        // UPLOAD MODAL FUNCTIONS
+        function openUploadModal() {
+            if (!isAdmin) return;
+            document.getElementById('uploadModal').classList.remove('hidden');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.add('hidden');
+        }
+
+        function handleUploadSubmit(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const type = document.getElementById('mediaType').value;
+            const title = document.getElementById('mediaTitle').value;
+            const url = document.getElementById('mediaUrl').value;
+            const tag = document.getElementById('mediaTag').value.toUpperCase() || 'HIGHLIGHT';
+
+            const newItem = {
+                id: Date.now().toString(),
+                type: type,
+                title: title,
+                url: url,
+                tag: tag,
+                views: '1',
+                date: 'JUST NOW'
             };
 
-            let isAdminLoggedIn = localStorage.getItem('shabs_admin_logged_in') === 'true';
+            mediaItems.unshift(newItem);
+            saveStorage();
+            closeUploadModal();
+            applyFilters();
+        }
 
-            // INITIAL MEDIA ITEMS
-            let defaultMedia = [
-                { id: '1', type: 'video', title: 'Special Force Alpha - [TM] Shabs Pub Event Tournament Final', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'SPECIAL FORCE ALPHA', views: '4.2k', date: '2 DAYS AGO' },
-                { id: '2', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
-                { id: '3', type: 'montage', title: 'Shabs Gaming - Best Snipes & Flick Shots Vol. 1', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'MONTAGE', views: '12.5k', date: '1 WEEK AGO' },
-                { id: '4', type: 'photo', title: 'Custom Cyberpunk Setup & Battlestation', url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80', tag: 'SETUP', views: '3.1k', date: '2 WEEKS AGO' },
-                { id: '5', type: 'video', title: 'Squad Wipe Battle Royale Victory', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'WARZONE', views: '2.9k', date: '2 WEEKS AGO' },
-                { id: '6', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
-            ];
-
-            let mediaItems = JSON.parse(localStorage.getItem('shabs_media_items')) || defaultMedia;
-            let currentFilter = 'all';
-
-            function saveMediaToStorage() {
-                localStorage.setItem('shabs_media_items', JSON.stringify(mediaItems));
-            }
-
-            function updateAdminUI() {
-                const addBtn = document.getElementById('addHighlightBtn');
-                const authBtnText = document.getElementById('authBtnText');
-                
-                if (isAdminLoggedIn) {
-                    addBtn.classList.remove('hidden');
-                    addBtn.classList.add('flex');
-                    authBtnText.textContent = 'LOGOUT';
-                } else {
-                    addBtn.classList.add('hidden');
-                    addBtn.classList.remove('flex');
-                    authBtnText.textContent = 'ADMIN LOGIN';
-                }
-                applyFilters();
-            }
-
-            // AUTH HANDLERS
-            document.getElementById('authBtn').addEventListener('click', function() {
-                if (isAdminLoggedIn) {
-                    isAdminLoggedIn = false;
-                    localStorage.setItem('shabs_admin_logged_in', 'false');
-                    updateAdminUI();
-                } else {
-                    document.getElementById('loginModal').classList.remove('hidden');
-                    document.getElementById('loginError').classList.add('hidden');
-                }
+        // RENDER & FILTER FUNCTIONS
+        function filterMedia(type) {
+            currentFilter = type;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-neonCyan', 'text-black');
+                btn.classList.add('bg-darkCard', 'text-gray-300', 'border-darkBorder');
             });
+            const active = document.getElementById(`tab-${type}`);
+            if (active) {
+                active.classList.remove('bg-darkCard', 'text-gray-300', 'border-darkBorder');
+                active.classList.add('bg-neonCyan', 'text-black');
+            }
+            applyFilters();
+        }
 
-            function closeLoginModal() {
-                document.getElementById('loginModal').classList.add('hidden');
-                document.getElementById('loginForm').reset();
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            let filtered = mediaItems;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(item => item.type === currentFilter);
             }
 
-            document.getElementById('closeLoginBtn').addEventListener('click', closeLoginModal);
-            document.getElementById('cancelLoginBtn').addEventListener('click', closeLoginModal);
-
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const u = document.getElementById('loginUsername').value.trim();
-                const p = document.getElementById('loginPassword').value.trim();
-
-                if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
-                    isAdminLoggedIn = true;
-                    localStorage.setItem('shabs_admin_logged_in', 'true');
-                    closeLoginModal();
-                    updateAdminUI();
-                } else {
-                    document.getElementById('loginError').classList.remove('hidden');
-                }
-            });
-
-            // UPLOAD MODAL HANDLERS
-            function openUploadModal() {
-                document.getElementById('uploadModal').classList.remove('hidden');
+            if (query !== '') {
+                filtered = filtered.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    (item.tag && item.tag.toLowerCase().includes(query))
+                );
             }
 
-            function closeUploadModal() {
-                document.getElementById('uploadModal').classList.add('hidden');
-                document.getElementById('addMediaForm').reset();
+            renderMedia(filtered);
+        }
+
+        function renderMedia(items) {
+            const grid = document.getElementById('mediaGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
             }
 
-            document.getElementById('addHighlightBtn').addEventListener('click', openUploadModal);
-            document.getElementById('closeUploadBtn').addEventListener('click', closeUploadModal);
-            document.getElementById('cancelUploadBtn').addEventListener('click', closeUploadModal);
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'cyber-border rounded-xl overflow-hidden flex flex-col group relative';
 
-            document.getElementById('addMediaForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const type = document.getElementById('mediaType').value;
-                const title = document.getElementById('mediaTitle').value;
-                const url = document.getElementById('mediaUrl').value;
-                const tag = document.getElementById('mediaTag').value.toUpperCase() || 'HIGHLIGHT';
-
-                const newItem = {
-                    id: Date.now().toString(),
-                    type: type,
-                    title: title,
-                    url: url,
-                    tag: tag,
-                    views: '1',
-                    date: 'JUST NOW'
-                };
-
-                mediaItems.unshift(newItem);
-                saveMediaToStorage();
-                applyFilters();
-                closeUploadModal();
-            });
-
-            // RENDER & FILTER FUNCTIONS
-            function renderMedia(items) {
-                const grid = document.getElementById('mediaGrid');
-                const emptyState = document.getElementById('emptyState');
-                grid.innerHTML = '';
-
-                if (items.length === 0) {
-                    emptyState.classList.remove('hidden');
-                    return;
-                } else {
-                    emptyState.classList.add('hidden');
-                }
-
-                items.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'cyber-border rounded-xl overflow-hidden flex flex-col group relative';
-
-                    let mediaHTML = '';
-                    if (item.type === 'video' || item.type === 'montage') {
-                        mediaHTML = `
-                            <div class="relative w-full aspect-video bg-black overflow-hidden">
-                                <iframe src="${item.url}" class="w-full h-full border-0" allowfullscreen></iframe>
-                                <div class="absolute top-2 left-2">
-                                    <span class="bg-black/80 border border-neonCyan/50 text-neonCyan text-[10px] font-orbitron font-bold px-2 py-0.5 rounded">
-                                        <i class="fa-solid fa-circle-play mr-1"></i>${item.tag || 'VIDEO'}
-                                    </span>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        mediaHTML = `
-                            <div class="relative w-full aspect-video bg-darkBg overflow-hidden cursor-pointer preview-img-btn" data-url="${item.url}" data-title="${escapeHtml(item.title)}">
-                                <img src="${item.url}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/800x450/121520/00f3ff?text=Shabs+Gaming'">
-                                <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-60"></div>
-                                <div class="absolute top-2 left-2">
-                                    <span class="bg-black/80 border border-neonGreen/50 text-neonGreen text-[10px] font-orbitron font-bold px-2 py-0.5 rounded">
-                                        <i class="fa-solid fa-image mr-1"></i>${item.tag || 'PHOTO'}
-                                    </span>
-                                </div>
-                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
-                                    <span class="bg-neonCyan/90 text-black font-orbitron text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1">
-                                        <i class="fa-solid fa-expand"></i> PREVIEW
-                                    </span>
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    const deleteBtnHTML = isAdminLoggedIn ? `
-                        <button type="button" class="delete-btn absolute top-2 right-2 z-10 w-7 h-7 bg-red-600/90 text-white rounded hover:bg-red-700 flex items-center justify-center text-xs transition-colors shadow-md cursor-pointer" data-id="${item.id}">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    ` : '';
-
-                    card.innerHTML = `
-                        ${deleteBtnHTML}
-                        ${mediaHTML}
-                        <div class="p-4 flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-orbitron text-sm font-bold text-white group-hover:text-neonCyan transition-colors line-clamp-2">
-                                    ${escapeHtml(item.title)}
-                                </h3>
-                            </div>
-                            <div class="flex items-center justify-between text-[11px] text-gray-400 mt-4 pt-3 border-t border-darkBorder/60">
-                                <span class="flex items-center gap-1">
-                                    <i class="fa-solid fa-eye text-neonCyan"></i> ${item.views} plays
+                let mediaHTML = '';
+                if (item.type === 'video' || item.type === 'montage') {
+                    mediaHTML = `
+                        <div class="relative w-full aspect-video bg-black overflow-hidden">
+                            <iframe src="${item.url}" class="w-full h-full border-0" allowfullscreen></iframe>
+                            <div class="absolute top-2 left-2">
+                                <span class="bg-black/80 border border-neonCyan/50 text-neonCyan text-[10px] font-orbitron font-bold px-2 py-0.5 rounded">
+                                    <i class="fa-solid fa-circle-play mr-1"></i>${item.tag || 'VIDEO'}
                                 </span>
-                                <span class="font-mono text-gray-500">${item.date}</span>
                             </div>
                         </div>
                     `;
-
-                    grid.appendChild(card);
-                });
-
-                // Attach Image Preview Listeners
-                document.querySelectorAll('.preview-img-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const url = this.getAttribute('data-url');
-                        const title = this.getAttribute('data-title');
-                        const content = document.getElementById('lightboxContent');
-                        content.innerHTML = `
-                            <img src="${url}" class="w-full max-h-[80vh] object-contain">
-                            <div class="p-3 bg-darkCard border-t border-darkBorder font-orbitron text-xs text-white text-center">
-                                ${title}
+                } else {
+                    mediaHTML = `
+                        <div class="relative w-full aspect-video bg-darkBg overflow-hidden cursor-pointer" onclick="openLightbox('${item.url}', '${escapeHtml(item.title)}')">
+                            <img src="${item.url}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/800x450/121520/00f3ff?text=Shabs+Gaming'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-60"></div>
+                            <div class="absolute top-2 left-2">
+                                <span class="bg-black/80 border border-neonGreen/50 text-neonGreen text-[10px] font-orbitron font-bold px-2 py-0.5 rounded">
+                                    <i class="fa-solid fa-image mr-1"></i>${item.tag || 'PHOTO'}
+                                </span>
                             </div>
-                        `;
-                        document.getElementById('lightboxModal').classList.remove('hidden');
-                    });
-                });
-
-                // Attach Delete Listeners
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const id = this.getAttribute('data-id');
-                        if (confirm("Are you sure you want to delete this highlight?")) {
-                            mediaItems = mediaItems.filter(item => item.id !== id);
-                            saveMediaToStorage();
-                            applyFilters();
-                        }
-                    });
-                });
-
-                document.getElementById('totalClipsCount').textContent = mediaItems.length;
-            }
-
-            document.getElementById('closeLightboxBtn').addEventListener('click', function() {
-                document.getElementById('lightboxModal').classList.add('hidden');
-            });
-
-            // TAB FILTER LISTENERS
-            ['all', 'video', 'photo', 'montage'].forEach(type => {
-                document.getElementById(`tab-${type}`).addEventListener('click', function() {
-                    currentFilter = type;
-                    document.querySelectorAll('.tab-btn').forEach(btn => {
-                        btn.classList.remove('bg-neonCyan', 'text-black');
-                        btn.classList.add('bg-darkCard', 'text-gray-300', 'border-darkBorder');
-                    });
-                    this.classList.remove('bg-darkCard', 'text-gray-300', 'border-darkBorder');
-                    this.classList.add('bg-neonCyan', 'text-black');
-                    applyFilters();
-                });
-            });
-
-            // SEARCH LISTENER
-            document.getElementById('searchInput').addEventListener('keyup', applyFilters);
-
-            function applyFilters() {
-                const query = document.getElementById('searchInput').value.toLowerCase().trim();
-                let filtered = mediaItems;
-
-                if (currentFilter !== 'all') {
-                    filtered = filtered.filter(item => item.type === currentFilter);
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                                <span class="bg-neonCyan/90 text-black font-orbitron text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-expand"></i> PREVIEW
+                                </span>
+                            </div>
+                        </div>
+                    `;
                 }
 
-                if (query !== '') {
-                    filtered = filtered.filter(item => 
-                        item.title.toLowerCase().includes(query) || 
-                        (item.tag && item.tag.toLowerCase().includes(query))
-                    );
-                }
+                const deleteBtn = isAdmin ? `
+                    <button onclick="deleteMedia('${item.id}')" type="button" class="absolute top-2 right-2 z-10 w-7 h-7 bg-red-600/90 text-white rounded hover:bg-red-700 flex items-center justify-center text-xs transition-colors shadow-md cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                ` : '';
 
-                renderMedia(filtered);
+                card.innerHTML = `
+                    ${deleteBtn}
+                    ${mediaHTML}
+                    <div class="p-4 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-orbitron text-sm font-bold text-white group-hover:text-neonCyan transition-colors line-clamp-2">
+                                ${escapeHtml(item.title)}
+                            </h3>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-gray-400 mt-4 pt-3 border-t border-darkBorder/60">
+                            <span class="flex items-center gap-1">
+                                <i class="fa-solid fa-eye text-neonCyan"></i> ${item.views} plays
+                            </span>
+                            <span class="font-mono text-gray-500">${item.date}</span>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            document.getElementById('totalClipsCount').textContent = mediaItems.length;
+        }
+
+        function deleteMedia(id) {
+            if (!isAdmin) return;
+            if (confirm("Delete this highlight item?")) {
+                mediaItems = mediaItems.filter(i => i.id !== id);
+                saveStorage();
+                applyFilters();
             }
+        }
 
-            function escapeHtml(text) {
-                return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-            }
+        function openLightbox(url, title) {
+            const content = document.getElementById('lightboxContent');
+            content.innerHTML = `
+                <img src="${url}" class="w-full max-h-[80vh] object-contain">
+                <div class="p-3 bg-darkCard border-t border-darkBorder font-orbitron text-xs text-white text-center">
+                    ${title}
+                </div>
+            `;
+            document.getElementById('lightboxModal').classList.remove('hidden');
+        }
 
-            // INIT
-            updateAdminUI();
-        });
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.add('hidden');
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // INITIALIZE ON LOAD
+        window.onload = function() {
+            updateUIState();
+        };
     </script>
 </body>
 </html>
