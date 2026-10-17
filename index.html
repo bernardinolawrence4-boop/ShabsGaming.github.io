@@ -123,8 +123,8 @@
                     <i class="fa-solid fa-user-shield text-neonCyan"></i> <span id="authBtnText">ADMIN LOGIN</span>
                 </button>
 
-                <!-- Add Highlight Button (STRICTLY HIDDEN FOR VIEWERS) -->
-                <button id="addHighlightBtn" onclick="openUploadModal()" type="button" class="!hidden font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
+                <!-- Add Highlight Button (HIDDEN FOR VIEWERS) -->
+                <button id="addHighlightBtn" onclick="openUploadModal()" type="button" class="hidden font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
                     <i class="fa-solid fa-plus text-sm"></i> ADD HIGHLIGHT
                 </button>
             </div>
@@ -144,12 +144,12 @@
                     <div class="relative group">
                         <div class="absolute -inset-1 bg-gradient-to-tr from-neonCyan via-neonPurple to-neonGreen rounded-full blur opacity-75 group-hover:opacity-100 transition"></div>
                         
-                        <!-- Avatar Container (Clicking profile picture enlarges profile picture for viewers and admins) -->
+                        <!-- Avatar Container (Clicking profile picture enlarges profile picture) -->
                         <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-neonCyan overflow-hidden bg-darkBg flex items-center justify-center shadow-xl cursor-pointer" onclick="zoomProfilePicture()">
                             <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80" alt="[MOD] Shabs Profile" class="w-full h-full object-cover">
                             
-                            <!-- Admin Edit Avatar Button Overlay (HIDDEN FOR VIEWERS) -->
-                            <button id="changeAvatarBtn" onclick="event.stopPropagation(); openAvatarModal();" type="button" class="!hidden absolute inset-0 bg-black/75 flex-col items-center justify-center text-neonCyan text-[11px] font-orbitron font-bold group-hover:!flex transition-opacity cursor-pointer">
+                            <!-- Admin Edit Avatar Button Overlay (STRICTLY HIDDEN BY DEFAULT) -->
+                            <button id="changeAvatarBtn" onclick="event.stopPropagation(); openAvatarModal();" type="button" class="hidden absolute inset-0 bg-black/75 flex-col items-center justify-center text-neonCyan text-[11px] font-orbitron font-bold transition-opacity cursor-pointer">
                                 <i class="fa-solid fa-camera text-sm mb-1"></i> UPLOAD PIC
                             </button>
                         </div>
@@ -404,14 +404,12 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Encoded authentication credentials (admin / shabs123)
         const _uHash = "YWRtaW4="; 
         const _pHash = "c2hhYnMxMjM="; 
 
         let isAdmin = localStorage.getItem('shabs_admin_status') === 'true';
         let currentFilter = 'all';
 
-        // DEFAULT DATA STORE
         let defaultItems = [
             { id: '1', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
             { id: '2', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
@@ -423,7 +421,6 @@
         let uploadedAvatarBase64 = "";
         let uploadedMediaBase64 = "";
 
-        // Initial setup
         document.getElementById('profileAvatarImg').src = savedAvatar;
         updateUIState();
 
@@ -442,21 +439,27 @@
             const changeAvatarBtn = document.getElementById('changeAvatarBtn');
 
             if (isAdmin) {
-                addBtn.classList.remove('!hidden');
+                addBtn.classList.remove('hidden');
                 addBtn.classList.add('flex');
-                changeAvatarBtn.classList.remove('!hidden');
+                
+                // Allow overlay to show on hover ONLY for admins
+                changeAvatarBtn.classList.remove('hidden');
+                changeAvatarBtn.classList.add('group-hover:flex');
+                
                 authText.textContent = 'LOGOUT';
             } else {
-                addBtn.classList.add('!hidden');
+                addBtn.classList.add('hidden');
                 addBtn.classList.remove('flex');
-                changeAvatarBtn.classList.add('!hidden');
-                changeAvatarBtn.classList.remove('!flex');
+                
+                // Strictly block avatar upload overlay for viewers
+                changeAvatarBtn.classList.add('hidden');
+                changeAvatarBtn.classList.remove('group-hover:flex');
+                
                 authText.textContent = 'ADMIN LOGIN';
             }
             applyFilters();
         }
 
-        // AUTH FUNCTIONS
         function toggleAdminAuth() {
             if (isAdmin) {
                 isAdmin = false;
@@ -494,7 +497,6 @@
             openLightbox(savedAvatar, 'image', 'Shabs Gaming - Profile Picture');
         }
 
-        // AVATAR BROWSE & UPLOAD (ADMIN ONLY)
         function openAvatarModal() {
             if (!isAdmin) return;
             document.getElementById('avatarFileInput').value = '';
@@ -533,7 +535,6 @@
             }
         }
 
-        // MEDIA HIGHLIGHT BROWSE & UPLOAD (ADMIN ONLY)
         function openUploadModal() {
             if (!isAdmin) return;
             document.getElementById('mediaFileInput').value = '';
@@ -598,7 +599,6 @@
             applyFilters();
         }
 
-        // DELETE MEDIA ITEM (STRICTLY ADMIN ONLY)
         function deleteMedia(id, e) {
             e.stopPropagation();
             if (!isAdmin) return;
@@ -609,11 +609,9 @@
             }
         }
 
-        // FILTER AND RENDER MEDIA
         function filterMedia(category) {
             currentFilter = category;
             
-            // Highlight selected tab
             const tabs = ['all', 'video', 'photo', 'montage'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
@@ -667,7 +665,6 @@
                                 ${item.tag}
                             </span>
 
-                            <!-- Admin Delete Option ONLY -->
                             ${isAdmin ? `
                                 <button onclick="deleteMedia('${item.id}', event)" title="Delete Media" class="absolute top-3 right-3 bg-red-600/90 hover:bg-red-700 text-white text-xs w-7 h-7 rounded flex items-center justify-center transition-colors">
                                     <i class="fa-solid fa-trash"></i>
@@ -689,7 +686,6 @@
             }).join('');
         }
 
-        // LIGHTBOX PREVIEW
         function openLightbox(url, type, title) {
             const container = document.getElementById('lightboxContent');
             const isVideo = type === 'video' || type === 'montage';
