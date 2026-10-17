@@ -123,8 +123,8 @@
                     <i class="fa-solid fa-user-shield text-neonCyan"></i> <span id="authBtnText">ADMIN LOGIN</span>
                 </button>
 
-                <!-- Add Highlight Button (HIDDEN FOR VIEWERS) -->
-                <button id="addHighlightBtn" onclick="openUploadModal()" type="button" class="hidden font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
+                <!-- Add Highlight Button (STRICTLY HIDDEN BY DEFAULT) -->
+                <button id="addHighlightBtn" onclick="openUploadModal()" type="button" style="display: none !important;" class="font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
                     <i class="fa-solid fa-plus text-sm"></i> ADD HIGHLIGHT
                 </button>
             </div>
@@ -144,12 +144,12 @@
                     <div class="relative group">
                         <div class="absolute -inset-1 bg-gradient-to-tr from-neonCyan via-neonPurple to-neonGreen rounded-full blur opacity-75 group-hover:opacity-100 transition"></div>
                         
-                        <!-- Avatar Container (Clicking profile picture enlarges profile picture) -->
-                        <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-neonCyan overflow-hidden bg-darkBg flex items-center justify-center shadow-xl cursor-pointer" onclick="zoomProfilePicture()">
+                        <!-- Avatar Container (Clicking profile picture enlarges picture) -->
+                        <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-neonCyan overflow-hidden bg-darkBg flex items-center justify-center shadow-xl cursor-pointer" onclick="zoomProfilePicture()" onmouseenter="handleAvatarHover(true)" onmouseleave="handleAvatarHover(false)">
                             <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80" alt="[MOD] Shabs Profile" class="w-full h-full object-cover">
                             
-                            <!-- Admin Edit Avatar Button Overlay (STRICTLY HIDDEN BY DEFAULT) -->
-                            <button id="changeAvatarBtn" onclick="event.stopPropagation(); openAvatarModal();" type="button" class="hidden absolute inset-0 bg-black/75 flex-col items-center justify-center text-neonCyan text-[11px] font-orbitron font-bold transition-opacity cursor-pointer">
+                            <!-- Admin Edit Avatar Overlay (STRICTLY HIDDEN BY DEFAULT) -->
+                            <button id="changeAvatarBtn" onclick="event.stopPropagation(); openAvatarModal();" type="button" style="display: none !important;" class="absolute inset-0 bg-black/80 flex-col items-center justify-center text-neonCyan text-[11px] font-orbitron font-bold transition-opacity cursor-pointer">
                                 <i class="fa-solid fa-camera text-sm mb-1"></i> UPLOAD PIC
                             </button>
                         </div>
@@ -432,32 +432,31 @@
             }
         }
 
-        // UPDATE UI STATE BASED ON VIEWER VS ADMIN
+        // STRICT UPDATE UI STATE FOR VIEWER VS ADMIN
         function updateUIState() {
             const addBtn = document.getElementById('addHighlightBtn');
             const authText = document.getElementById('authBtnText');
             const changeAvatarBtn = document.getElementById('changeAvatarBtn');
 
             if (isAdmin) {
-                addBtn.classList.remove('hidden');
-                addBtn.classList.add('flex');
-                
-                // Allow overlay to show on hover ONLY for admins
-                changeAvatarBtn.classList.remove('hidden');
-                changeAvatarBtn.classList.add('group-hover:flex');
-                
+                addBtn.style.setProperty('display', 'inline-flex', 'important');
                 authText.textContent = 'LOGOUT';
             } else {
-                addBtn.classList.add('hidden');
-                addBtn.classList.remove('flex');
-                
-                // Strictly block avatar upload overlay for viewers
-                changeAvatarBtn.classList.add('hidden');
-                changeAvatarBtn.classList.remove('group-hover:flex');
-                
+                addBtn.style.setProperty('display', 'none', 'important');
+                changeAvatarBtn.style.setProperty('display', 'none', 'important');
                 authText.textContent = 'ADMIN LOGIN';
             }
             applyFilters();
+        }
+
+        // HOVER CONTROLLER FOR AVATAR
+        function handleAvatarHover(isHovered) {
+            const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+            if (isAdmin && isHovered) {
+                changeAvatarBtn.style.setProperty('display', 'flex', 'important');
+            } else {
+                changeAvatarBtn.style.setProperty('display', 'none', 'important');
+            }
         }
 
         function toggleAdminAuth() {
