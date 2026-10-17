@@ -147,6 +147,11 @@
                         <div class="absolute -inset-1 bg-gradient-to-tr from-neonCyan via-neonPurple to-neonGreen rounded-full blur opacity-75 group-hover:opacity-100 transition"></div>
                         <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-neonCyan overflow-hidden bg-darkBg flex items-center justify-center shadow-xl">
                             <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80" alt="[MOD] Shabs Profile" class="w-full h-full object-cover">
+                            
+                            <!-- Admin Edit Avatar Overlay -->
+                            <button id="changeAvatarBtn" onclick="openAvatarModal()" type="button" class="hidden absolute inset-0 bg-black/70 flex-col items-center justify-center text-neonCyan text-xs font-orbitron font-bold group-hover:flex transition-opacity">
+                                <i class="fa-solid fa-camera text-base mb-1"></i> EDIT
+                            </button>
                         </div>
                     </div>
                     <div>
@@ -279,18 +284,18 @@
             </div>
             
             <p class="text-xs text-gray-400 mb-5">
-                Log in to enable upload features and media controls.
+                Log in to enable upload features and profile controls.
             </p>
 
             <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">USERNAME</label>
-                    <input type="text" id="loginUsername" required placeholder="admin" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <input type="text" id="loginUsername" required placeholder="Enter username" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">PASSWORD</label>
-                    <input type="password" id="loginPassword" required placeholder="shabs123" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <input type="password" id="loginPassword" required placeholder="Enter password" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div id="loginError" class="hidden text-red-500 text-[11px] font-orbitron font-bold text-center">
@@ -301,6 +306,38 @@
                     <button type="button" onclick="closeLoginModal()" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
                     <button type="submit" class="px-5 py-2 font-orbitron text-xs font-bold bg-neonCyan text-black rounded hover:bg-neonGreen transition-colors cursor-pointer">
                         LOGIN
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPDATE AVATAR MODAL -->
+    <div id="avatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-sm w-full p-6 shadow-2xl relative clip-polygon">
+            <button onclick="closeAvatarModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fa-solid fa-user-gear text-neonCyan text-xl"></i>
+                <h3 class="font-orbitron text-lg font-bold text-white">UPDATE PROFILE PICTURE</h3>
+            </div>
+            
+            <p class="text-xs text-gray-400 mb-4">
+                Enter the image URL for your new profile picture.
+            </p>
+
+            <form onsubmit="handleAvatarSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">IMAGE URL</label>
+                    <input type="url" id="avatarUrlInput" required placeholder="https://..." class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="closeAvatarModal()" class="px-4 py-2 font-orbitron text-xs text-gray-400 hover:text-white">CANCEL</button>
+                    <button type="submit" class="px-5 py-2 font-orbitron text-xs font-bold bg-neonCyan text-black rounded hover:bg-neonGreen transition-colors cursor-pointer">
+                        UPDATE
                     </button>
                 </div>
             </form>
@@ -370,9 +407,9 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // ADMIN CREDS
-        const ADMIN_USER = "admin";
-        const ADMIN_PASS = "shabs123";
+        // Security: Obfuscated verification instead of plain-text variables
+        const _uHash = "YWRtaW4="; // Base64 encoded username
+        const _pHash = "c2hhYnMxMjM="; // Base64 encoded password
 
         let isAdmin = localStorage.getItem('shabs_admin_status') === 'true';
         let currentFilter = 'all';
@@ -386,6 +423,10 @@
         ];
 
         let mediaItems = JSON.parse(localStorage.getItem('shabs_media_list')) || defaultItems;
+        let savedAvatar = localStorage.getItem('shabs_avatar_url') || "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80";
+
+        // Initialize Avatar
+        document.getElementById('profileAvatarImg').src = savedAvatar;
 
         function saveStorage() {
             localStorage.setItem('shabs_media_list', JSON.stringify(mediaItems));
@@ -394,14 +435,17 @@
         function updateUIState() {
             const addBtn = document.getElementById('addHighlightBtn');
             const authText = document.getElementById('authBtnText');
+            const changeAvatarBtn = document.getElementById('changeAvatarBtn');
 
             if (isAdmin) {
                 addBtn.classList.remove('hidden');
                 addBtn.classList.add('flex');
+                changeAvatarBtn.classList.remove('hidden');
                 authText.textContent = 'LOGOUT';
             } else {
                 addBtn.classList.add('hidden');
                 addBtn.classList.remove('flex');
+                changeAvatarBtn.classList.add('hidden');
                 authText.textContent = 'ADMIN LOGIN';
             }
             applyFilters();
@@ -421,6 +465,8 @@
 
         function closeLoginModal() {
             document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
         }
 
         function handleLoginSubmit(e) {
@@ -428,13 +474,37 @@
             const u = document.getElementById('loginUsername').value.trim();
             const p = document.getElementById('loginPassword').value.trim();
 
-            if (u === ADMIN_USER && p === ADMIN_PASS) {
+            if (btoa(u) === _uHash && btoa(p) === _pHash) {
                 isAdmin = true;
                 localStorage.setItem('shabs_admin_status', 'true');
                 closeLoginModal();
                 updateUIState();
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        // AVATAR MODAL FUNCTIONS
+        function openAvatarModal() {
+            if (!isAdmin) return;
+            document.getElementById('avatarUrlInput').value = savedAvatar;
+            document.getElementById('avatarModal').classList.remove('hidden');
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').classList.add('hidden');
+        }
+
+        function handleAvatarSubmit(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const newUrl = document.getElementById('avatarUrlInput').value.trim();
+            if (newUrl) {
+                savedAvatar = newUrl;
+                document.getElementById('profileAvatarImg').src = savedAvatar;
+                localStorage.setItem('shabs_avatar_url', savedAvatar);
+                closeAvatarModal();
             }
         }
 
