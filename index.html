@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- Social Links (Facebook & TikTok ONLY) & Admin Action Buttons -->
+            <!-- Social Links (Facebook & TikTok ONLY) & Admin Auth Toggle -->
             <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-center sm:justify-end">
                 <div class="flex items-center gap-2 mr-2">
                     <!-- Facebook Page Link -->
@@ -120,12 +120,12 @@
                     </a>
                 </div>
 
-                <!-- Admin Dynamic Button -->
+                <!-- Admin Login / Logout Toggle Button -->
                 <button id="authBtn" onclick="toggleAdminAuth()" type="button" class="font-orbitron text-xs font-bold border border-darkBorder bg-darkCard text-gray-300 px-3.5 py-2.5 rounded hover:border-neonCyan hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
                     <i class="fa-solid fa-user-shield text-neonCyan"></i> <span id="authBtnText">ADMIN LOGIN</span>
                 </button>
 
-                <!-- Add Highlight Button (Visible ONLY to Admin) -->
+                <!-- Add Highlight Button (STRICTLY Admin Only) -->
                 <button id="addHighlightBtn" onclick="openUploadModal()" type="button" class="hidden font-orbitron text-xs font-bold bg-gradient-to-r from-neonCyan to-neonGreen text-black px-4 py-2.5 rounded clip-polygon hover:brightness-110 transition-all items-center gap-2 shadow-lg shadow-neonCyan/20 cursor-pointer">
                     <i class="fa-solid fa-plus text-sm"></i> ADD HIGHLIGHT
                 </button>
@@ -143,19 +143,19 @@
                 
                 <!-- Profile Info & Avatar -->
                 <div class="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left w-full md:w-auto">
-                    <div class="relative group cursor-pointer" onclick="openAvatarZoom()">
+                    <div class="relative group cursor-pointer" onclick="openAvatarZoom()" title="Click to enlarge profile picture">
                         <div class="absolute -inset-1 bg-gradient-to-tr from-neonCyan via-neonPurple to-neonGreen rounded-full blur opacity-75 group-hover:opacity-100 transition"></div>
                         <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-neonCyan overflow-hidden bg-darkBg flex items-center justify-center shadow-xl">
-                            <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80" alt="[MOD] Shabs Profile" class="w-full h-full object-cover">
+                            <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&q=80" alt="Lawrence Bernardino ([MOD] Shabs Profile)" class="w-full h-full object-cover">
                             
-                            <!-- Viewer Hover Zoom Indicator -->
-                            <div id="avatarZoomHover" class="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-neonCyan text-[11px] font-orbitron font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                            <!-- Hover Overlay for Lightbox Zoom (Available for Viewers and Admins) -->
+                            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-neonCyan text-[11px] font-orbitron font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                                 <i class="fa-solid fa-magnifying-glass-plus text-base mb-1"></i> ENLARGE
                             </div>
 
-                            <!-- Admin Change Avatar Overlay -->
-                            <button id="changeAvatarBtn" onclick="event.stopPropagation(); openAvatarModal()" type="button" class="hidden absolute bottom-0 inset-x-0 bg-black/80 text-neonCyan text-[10px] font-orbitron font-bold py-1 hover:text-white transition-colors cursor-pointer text-center">
-                                <i class="fa-solid fa-camera mr-1"></i> UPLOAD
+                            <!-- Admin Avatar Change Button (STRICTLY Admin Only) -->
+                            <button id="changeAvatarBtn" onclick="event.stopPropagation(); openAvatarModal()" type="button" title="Upload new avatar" class="hidden absolute bottom-1 right-1 w-8 h-8 bg-neonCyan text-black rounded-full shadow-lg border-2 border-black flex items-center justify-center hover:bg-neonGreen transition-colors cursor-pointer z-10">
+                                <i class="fa-solid fa-camera text-xs"></i>
                             </button>
                         </div>
                     </div>
@@ -255,7 +255,7 @@
 
         <!-- SHOWCASE MEDIA GRID -->
         <section id="mediaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Items generated dynamically -->
+            <!-- Dynamic Items -->
         </section>
 
         <!-- EMPTY STATE -->
@@ -289,7 +289,7 @@
             </div>
             
             <p class="text-xs text-gray-400 mb-5">
-                Log in to enable upload features and profile controls.
+                Log in to enable upload features and admin controls.
             </p>
 
             <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
@@ -317,7 +317,7 @@
         </div>
     </div>
 
-    <!-- UPDATE AVATAR MODAL (ADMIN ONLY) -->
+    <!-- UPDATE AVATAR MODAL (STRICTLY ADMIN ONLY) -->
     <div id="avatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-sm w-full p-6 shadow-2xl relative clip-polygon">
             <button onclick="closeAvatarModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
@@ -326,16 +326,16 @@
             
             <div class="flex items-center gap-2 mb-2">
                 <i class="fa-solid fa-user-gear text-neonCyan text-xl"></i>
-                <h3 class="font-orbitron text-lg font-bold text-white">UPLOAD PROFILE PICTURE</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white">UPDATE PROFILE PICTURE</h3>
             </div>
             
             <p class="text-xs text-gray-400 mb-4">
-                Select an image file from your device.
+                Select an image file from your device to change profile picture.
             </p>
 
             <form onsubmit="handleAvatarSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block font-orbitron text-xs text-gray-300 mb-1">BROWSE IMAGE FROM DEVICE</label>
+                    <label class="block font-orbitron text-xs text-gray-300 mb-1">BROWSE IMAGE FILE</label>
                     <input type="file" id="avatarFileInput" accept="image/*" required onchange="previewAvatarFile(event)" class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-xs file:font-orbitron file:font-bold file:bg-neonCyan file:text-black hover:file:bg-neonGreen cursor-pointer bg-darkBg border border-darkBorder rounded">
                 </div>
 
@@ -349,7 +349,7 @@
         </div>
     </div>
 
-    <!-- ADD HIGHLIGHT / UPLOAD MODAL (ADMIN ONLY) -->
+    <!-- ADD HIGHLIGHT / UPLOAD MODAL (STRICTLY ADMIN ONLY) -->
     <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-darkCard border border-neonCyan/40 rounded-xl max-w-lg w-full p-6 shadow-2xl relative clip-polygon">
             <button onclick="closeUploadModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
@@ -373,7 +373,7 @@
 
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">TITLE</label>
-                    <input type="text" id="mediaTitle" required placeholder="e.g. Special Force Alpha Pub Event Ace" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <input type="text" id="mediaTitle" required placeholder="e.g. Special Force Alpha Clutch Play" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div>
@@ -383,7 +383,7 @@
 
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">TAG / CATEGORY</label>
-                    <input type="text" id="mediaTag" placeholder="e.g. SPECIAL FORCE ALPHA, CS2, VALORANT" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
+                    <input type="text" id="mediaTag" placeholder="e.g. SPECIAL FORCE ALPHA, FPS" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
                 </div>
 
                 <div class="pt-2 flex justify-end gap-3">
@@ -396,10 +396,10 @@
         </div>
     </div>
 
-    <!-- LIGHTBOX MODAL FOR MEDIA AND PROFILE ZOOM -->
+    <!-- LIGHTBOX MODAL FOR MEDIA AND PROFILE PICTURE ENLARGEMENT -->
     <div id="lightboxModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden" onclick="closeLightbox()">
         <div class="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
-            <button onclick="closeLightbox()" type="button" class="absolute -top-10 right-0 text-white text-2xl hover:text-neonCyan">
+            <button onclick="closeLightbox()" type="button" class="absolute -top-10 right-0 text-white text-2xl hover:text-neonCyan cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div id="lightboxContent" class="w-full rounded-lg overflow-hidden border border-neonCyan/30 shadow-2xl bg-black">
@@ -411,7 +411,7 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Encoded authentication tokens
+        // Encoded authentication hash
         const _uHash = "YWRtaW4="; 
         const _pHash = "c2hhYnMxMjM="; 
 
@@ -430,40 +430,38 @@
         let uploadedAvatarBase64 = "";
         let uploadedMediaBase64 = "";
 
-        // Set initial Avatar
+        // Set initial Avatar image
         document.getElementById('profileAvatarImg').src = savedAvatar;
 
         function saveStorage() {
             try {
                 localStorage.setItem('shabs_media_list', JSON.stringify(mediaItems));
             } catch (e) {
-                alert("Storage limit reached! Please try uploading smaller files.");
+                alert("Storage limit reached! Please use smaller media files.");
             }
         }
 
+        // Toggles visibility of admin controls strictly based on isAdmin state
         function updateUIState() {
             const addBtn = document.getElementById('addHighlightBtn');
             const authText = document.getElementById('authBtnText');
             const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-            const avatarZoomHover = document.getElementById('avatarZoomHover');
 
             if (isAdmin) {
                 addBtn.classList.remove('hidden');
                 addBtn.classList.add('flex');
                 changeAvatarBtn.classList.remove('hidden');
-                avatarZoomHover.classList.add('hidden');
                 authText.textContent = 'LOGOUT';
             } else {
                 addBtn.classList.add('hidden');
                 addBtn.classList.remove('flex');
                 changeAvatarBtn.classList.add('hidden');
-                avatarZoomHover.classList.remove('hidden');
                 authText.textContent = 'ADMIN LOGIN';
             }
             applyFilters();
         }
 
-        // AUTH FUNCTIONS
+        // AUTHENTICATION MANAGEMENT
         function toggleAdminAuth() {
             if (isAdmin) {
                 isAdmin = false;
@@ -496,13 +494,13 @@
             }
         }
 
-        // ZOOM / ENLARGE PROFILE PICTURE FOR ANY USER
+        // LIGHTBOX PROFILE ENLARGEMENT (ACCESSIBLE TO ALL USERS)
         function openAvatarZoom() {
             const avatarSrc = document.getElementById('profileAvatarImg').src;
-            openLightbox(avatarSrc, "LAWRENCE BERNARDINO ([MOD] SHABS)");
+            openLightbox(avatarSrc, "LAWRENCE BERNARDINO ([MOD] SHABS) - PROFILE PICTURE");
         }
 
-        // AVATAR BROWSE & UPLOAD (ADMIN ONLY)
+        // AVATAR BROWSE & UPLOAD (ADMIN ONLY GUARDED)
         function openAvatarModal() {
             if (!isAdmin) return;
             document.getElementById('avatarFileInput').value = '';
@@ -535,13 +533,13 @@
                 try {
                     localStorage.setItem('shabs_avatar_url', savedAvatar);
                 } catch (err) {
-                    alert('Avatar file size is too large. Please choose a smaller image.');
+                    alert('Avatar file size is too large. Please select a smaller image.');
                 }
                 closeAvatarModal();
             }
         }
 
-        // MEDIA HIGHLIGHT BROWSE & UPLOAD (ADMIN ONLY)
+        // MEDIA HIGHLIGHT UPLOAD (ADMIN ONLY GUARDED)
         function openUploadModal() {
             if (!isAdmin) return;
             document.getElementById('mediaFileInput').value = '';
@@ -559,11 +557,7 @@
         function updateUploadAcceptType() {
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFileInput');
-            if (type === 'photo') {
-                fileInput.accept = 'image/*';
-            } else {
-                fileInput.accept = 'video/*';
-            }
+            fileInput.accept = type === 'photo' ? 'image/*' : 'video/*';
         }
 
         function handleMediaFileSelect(event) {
@@ -582,7 +576,7 @@
             if (!isAdmin) return;
 
             if (!uploadedMediaBase64) {
-                alert('Please browse and select a file to upload!');
+                alert('Please browse and select a file from your device!');
                 return;
             }
 
@@ -686,8 +680,9 @@
                     `;
                 }
 
+                // Delete button rendered strictly when isAdmin is true
                 let deleteBtnHTML = isAdmin ? `
-                    <button onclick="deleteMediaItem('${item.id}')" title="Delete Highlight" class="text-red-400 hover:text-red-500 text-xs p-1 cursor-pointer">
+                    <button onclick="deleteMediaItem('${item.id}')" title="Delete Highlight" class="text-red-400 hover:text-red-500 text-xs p-1 cursor-pointer transition-colors">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 ` : '';
@@ -715,16 +710,15 @@
             document.getElementById('totalClipsCount').textContent = mediaItems.length;
         }
 
+        // GUARDED DELETE ACTION
         function deleteMediaItem(id) {
             if (!isAdmin) return;
-            if (confirm('Are you sure you want to delete this highlight?')) {
-                mediaItems = mediaItems.filter(i => i.id !== id);
-                saveStorage();
-                applyFilters();
-            }
+            mediaItems = mediaItems.filter(i => i.id !== id);
+            saveStorage();
+            applyFilters();
         }
 
-        // LIGHTBOX
+        // LIGHTBOX DISPLAY SYSTEM
         function openLightbox(url, title) {
             const content = document.getElementById('lightboxContent');
             content.innerHTML = `
@@ -744,7 +738,7 @@
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // INITIALIZE
+        // INITIALIZE APP
         updateUIState();
     </script>
 </body>
