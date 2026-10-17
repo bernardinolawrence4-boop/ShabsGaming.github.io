@@ -323,7 +323,6 @@
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">MEDIA TYPE</label>
                     <select id="mediaType" class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
-                        <option value="video">Video (YouTube / Embed URL)</option>
                         <option value="photo">Photo / Image Screenshot</option>
                         <option value="montage">Montage Edit</option>
                     </select>
@@ -336,8 +335,6 @@
 
                 <div>
                     <label class="block font-orbitron text-xs text-gray-300 mb-1">IMAGE / VIDEO URL</label>
-                    <input type="url" id="mediaUrl" required placeholder="https://www.youtube.com/embed/... or https://images.unsplash.com/..." class="w-full bg-darkBg border border-darkBorder rounded px-3 py-2 text-xs text-white focus:border-neonCyan outline-none">
-                    <span class="text-[10px] text-gray-500 mt-1 block">For YouTube videos, use the official embed format: <strong>https://www.youtube.com/embed/VIDEO_ID</strong></span>
                 </div>
 
                 <div>
@@ -379,9 +376,7 @@
 
         // DEFAULT DATA STORE
         let defaultItems = [
-            { id: '1', type: 'video', title: 'Special Force Alpha - [TM] Shabs Pub Event Tournament Final', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'SPECIAL FORCE ALPHA', views: '4.2k', date: '2 DAYS AGO' },
             { id: '2', type: 'photo', title: 'Official Moderator Announcement & Reward Distribution', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', tag: 'COMMUNITY', views: '1.8k', date: '3 DAYS AGO' },
-            { id: '3', type: 'montage', title: 'Shabs Gaming - Best Snipes & Flick Shots Vol. 1', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', tag: 'MONTAGE', views: '12.5k', date: '1 WEEK AGO' },
             { id: '4', type: 'photo', title: 'Special Force Alpha Team Roster Graphic Poster', url: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80', tag: 'GRAPHIC', views: '950', date: '1 MONTH AGO' }
         ];
 
